@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>Quản lý Kho Key - PKStore Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <%- include('style') %>
+</head>
+<body>
+    <%- include('navbar') %>
+
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold mb-0"><i class="bi bi-key"></i> Quản lý Kho Bản Quyền</h2>
+            <button class="btn btn-red" data-bs-toggle="modal" data-bs-target="#modalNhaoKey" onclick="loadDanhSachSanPham()">
+                <i class="bi bi-cloud-arrow-up"></i> Nạp Key Mới
+            </button>
+        </div>
+
+        <div class="admin-container">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <select class="form-select" id="filterStatus" onchange="loadDanhSachKey()">
+                        <option value="">-- Tất cả trạng thái --</option>
+                        <option value="SanSang">Sẵn sàng bán (Available)</option>
+                        <option value="DaBan">Đã bán (Sold)</option>
+                        <option value="DangGiuCho">Đang chờ thanh toán</option>
+                    </select>
+                </div>
+            </div>
+
+            <table class="table table-hover align-middle border">
+                <thead class="table-light">
+                    <tr>
+                        <th width="5%">STT</th>
+                        <th width="30%">Thuộc Sản Phẩm</th>
+                        <th width="35%">Mã Kích Hoạt (License Key)</th>
+                        <th width="15%" class="text-center">Trạng Thái</th>
+                        <th width="15%" class="text-center">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody id="bangKhoKey">
+                    <tr><td colspan="5" class="text-center text-muted">Đang tải dữ liệu...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalNhaoKey" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title"><i class="bi bi-database-add"></i> Nạp License Key Vào Kho</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNhapKey">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Chọn Sản Phẩm <span class="text-danger">*</span></label>
+                            <select class="form-select border-primary" id="sanPham_id" required>
+                                <option value="" disabled selected>Đang tải danh sách sản phẩm...</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Danh sách Mã Kích Hoạt (Keys) <span class="text-danger">*</span></label>
+                            <textarea class="form-control font-monospace" id="danhSachKey" rows="8" required 
+                                placeholder="Nhập mỗi key trên 1 dòng...&#10;AAAA-BBBB-CCCC-DDDD&#10;1111-2222-3333-4444"></textarea>
+                            <div class="form-text text-primary"><i class="bi bi-info-circle"></i> Hệ thống sẽ tự động tách từng dòng thành các key riêng biệt để lưu trữ.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-success fw-bold" id="btnLuuKey">
+                        <i class="bi bi-save"></i> Lưu Tất Cả Vào Kho
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('footer') %>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+// 1. Hàm tải danh sách KEY (Đã sửa URL)
+        async function loadDanhSachKey() {
+            var statusFilter = document.getElementById('filterStatus').value;
+            // Trỏ về đúng URL mới của Kho Key
+            var url = statusFilter ? `/khobanquyen/api/danhsach?trangThai=${statusFilter}` : '/khobanquyen/api/danhsach';
+
+            try {
+                var response = await fetch(url);
+                var keys = await response.json();
+                var tbody = document.getElementById('bangKhoKey');
+
+                // Lọc thủ công trên Frontend nếu Backend chưa hỗ trợ query (Bọc lót an toàn)
+                if (statusFilter) {
+                    keys = keys.filter(k => k.trangThai === statusFilter);
+                }
+
+                if (keys.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center">Kho hiện đang trống hoặc không có key phù hợp.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                keys.forEach((k, index) => {
+                    let badgeClass = 'bg-success';
+                    let tenTrangThai = 'Sẵn sàng';
+
+                    if (k.trangThai === 'DaBan') { badgeClass = 'bg-danger'; tenTrangThai = 'Đã bán'; }
+                    if (k.trangThai === 'DangGiuCho') { badgeClass = 'bg-warning text-dark'; tenTrangThai = 'Chờ thanh toán'; }
+
+                    let tenSP = k.sanPham_id ? k.sanPham_id.tenSanPham : '<span class="text-danger fst-italic">Sản phẩm đã bị xóa</span>';
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td class="fw-bold">${tenSP}</td>
+                            <td class="key-text text-primary font-monospace fw-bold">${k.maKichHoat}</td>
+                            <td class="text-center"><span class="badge ${badgeClass}">${tenTrangThai}</span></td>
+                            <td class="text-center">
+                                ${k.trangThai === 'SanSang' ?
+                                    `<button class="btn btn-sm btn-outline-danger" onclick="xoaKey('${k._id}')">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </button>`
+                                    : '<span class="text-muted small">Không thể xóa</span>'}
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                document.getElementById('bangKhoKey').innerHTML = '<tr><td colspan="5" class="text-danger text-center">Lỗi tải dữ liệu!</td></tr>';
+            }
+        }
+
+        // 2. BỔ SUNG HÀM TẢI SẢN PHẨM: Đổ vào Form khi bấm "Nạp Key Mới"
+        async function loadDanhSachSanPham() {
+            try {
+                // Trỏ về API lấy danh sách Sản Phẩm
+                var response = await fetch('/sanpham/api/danhsach');
+                var sanPhams = await response.json();
+                var selectSanPham = document.getElementById('sanPham_id');
+                
+                selectSanPham.innerHTML = '<option value="" disabled selected>-- Chọn phần mềm cần nạp key --</option>';
+                sanPhams.forEach(sp => {
+                    selectSanPham.innerHTML += `<option value="${sp._id}">${sp.tenSanPham}</option>`;
+                });
+            } catch (error) {
+                console.error("Lỗi tải danh sách sản phẩm", error);
+                document.getElementById('sanPham_id').innerHTML = '<option value="" disabled>Lỗi tải dữ liệu</option>';
+            }
+        }
+
+        // 3. BỔ SUNG HÀM XÓA KEY
+        async function xoaKey(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa License Key này khỏi kho?')) {
+                try {
+                    // Trỏ về API xóa Key
+                    var response = await fetch('/khobanquyen/api/xoa/' + id, { method: 'DELETE' });
+                    if (response.ok) {
+                        alert('Đã xóa Key thành công!');
+                        loadDanhSachKey(); // Tải lại bảng
+                    } else {
+                        alert('Lỗi: Không thể xóa Key này!');
+                    }
+                } catch (error) {
+                    alert('Lỗi kết nối máy chủ!');
+                }
+            }
+        }
+        
+        // 4. XỬ LÝ SỰ KIỆN NẠP KEY (Đã sửa URL)
+        document.getElementById('btnLuuKey').addEventListener('click', async function() {
+            var sanPhamId = document.getElementById('sanPham_id').value;
+            var textKeys = document.getElementById('danhSachKey').value;
+
+            if (!sanPhamId || !textKeys.trim()) {
+                alert("Vui lòng chọn sản phẩm và nhập ít nhất 1 key!");
+                return;
+            }
+
+            var arrKeys = textKeys.split('\n').map(key => key.trim()).filter(key => key !== '');
+
+            if (arrKeys.length === 0) {
+                alert("Danh sách key không hợp lệ!"); return;
+            }
+            
+            var btnSubmit = document.getElementById('btnLuuKey');
+            btnSubmit.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Đang nạp ${arrKeys.length} keys...`;
+            btnSubmit.disabled = true;
+
+            let soLuongThanhCong = 0;
+            let soLuongLoi = 0;
+
+            for (let i = 0; i < arrKeys.length; i++) {
+                try {
+                    // SỬA URL API THÊM KEY
+                    var response = await fetch('/khobanquyen/api/them', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            sanPham_id: sanPhamId,
+                            maKey: arrKeys[i], // Chú ý: Ở backend bạn dùng biến 'maKey' thay vì 'maKichHoat'
+                            trangThai: 'SanSang'
+                        })
+                    });
+
+                    if (response.ok) {
+                        soLuongThanhCong++;
+                    } else {
+                        soLuongLoi++;
+                    }
+                } catch (error) {
+                    soLuongLoi++;
+                }
+            }
+
+            alert(`Hoàn tất! \n- Thành công: ${soLuongThanhCong} keys \n- Thất bại (Trùng lặp/Lỗi): ${soLuongLoi} keys`);
+            
+            var modalEl = document.getElementById('modalNhaoKey');
+            var modalObj = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modalObj.hide();
+            
+            document.getElementById('formNhapKey').reset();
+            btnSubmit.innerHTML = `<i class="bi bi-save"></i> Lưu Tất Cả Vào Kho`;
+            btnSubmit.disabled = false;
+            
+            loadDanhSachKey();
+        });
+
+        // Tải danh sách key khi vừa mở trang
+        document.addEventListener('DOMContentLoaded', loadDanhSachKey);
+    </script>
+</body>
+</html>

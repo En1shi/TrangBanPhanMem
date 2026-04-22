@@ -1,0 +1,245 @@
+<style>
+    body {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    /* Navbar */
+    .navbar.main-menu {
+        background-color: #ffffff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 10px 0;
+    }
+
+    .dashboard-header {
+        background: #fff;
+        padding: 20px 0;
+        border-bottom: 1px solid #eaeaea;
+        margin-bottom: 30px;
+    }
+
+    .admin-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 30px 20px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        border: 1px solid #f0f0f0;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: #333;
+        display: block;
+    }
+
+    .admin-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(214, 64, 64, 0.15);
+        border-color: #d64040;
+        color: #d64040;
+    }
+
+    .admin-icon {
+        font-size: 3.5rem;
+        color: #d64040;
+        margin-bottom: 15px;
+    }
+
+    .admin-title {
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+
+    .admin-desc {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .navbar-brand {
+        font-weight: 800;
+        color: #d64040 !important;
+        font-size: 1.5rem;
+    }
+
+    .nav-link {
+        font-weight: 600;
+        color: #333 !important;
+        margin: 0 5px;
+    }
+
+    .nav-pills .nav-link.active {
+        background-color: #f8f9fa !important;
+        border-left: 4px solid #dc3545 !important;
+        color: #dc3545 !important;
+        border-radius: 0;
+    }
+
+    .nav-link:hover {
+        color: #d64040 !important;
+    }
+
+    /* Buttons */
+    .btn-red {
+        background-color: #d64040;
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+
+    .btn-red:hover {
+        background-color: #b52b2b;
+        color: white;
+    }
+
+    .btn-outline-red {
+        border: 2px solid #d64040;
+        color: #d64040;
+        font-weight: bold;
+    }
+
+    .btn-outline-red:hover {
+        background-color: #d64040;
+        color: white;
+    }
+
+    .list-software {
+        margin: 100px 0 60px;
+        border-top: 3px solid #d64040;
+        padding-top: 30px;
+        background: #fff;
+    }
+
+    .box-element {
+        background: #fff;
+        border: 1px solid #eaeaea;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .accordion-button:focus { box-shadow: none; border-color: rgba(0,0,0,.125); }
+    .accordion-button:not(.collapsed) { background-color: #fff3f3; color: #dc3545; }
+
+    .box-element:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .text-hover-danger:hover { color: #dc3545 !important; transition: 0.2s; }
+
+    .sub-title {
+        color: #d64040;
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+
+    .price-product-item {
+        color: #333;
+    }
+
+    /* Footer */
+    footer {
+        background-color: #ffffff;
+        border-top: 1px solid #eaeaea;
+        padding: 40px 0 20px;
+        font-size: 0.9rem;
+    }
+
+    .title_list {
+        color: #0b8144;
+        margin-bottom: 20px;
+    }
+
+    .list_item_box {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .list_item_box li {
+        margin-bottom: 10px;
+    }
+
+    .list_item_box a {
+        text-decoration: none;
+        color: #555;
+    }
+
+    .list_item_box a:hover {
+        color: #d64040;
+    }
+
+    #strong-info-company {
+        color: #d64040;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .login-wrapper {
+        min-height: calc(100vh - 200px);
+        /* Căn giữa form theo chiều dọc */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 0;
+        margin-top: 60px;
+        /* Cách thanh navbar */
+    }
+
+    .login-card {
+        background: #ffffff;
+        width: 100%;
+        max-width: 450px;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        border: 1px solid #eaeaea;
+    }
+
+    .login-logo {
+        color: #d64040;
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+
+    .img-admin-table {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+    } 
+
+    .img-table {
+        width: 240px;
+        height: 240px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    .admin-container {
+        background: #fff;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .ma-don {
+        font-family: monospace;
+        font-weight: bold;
+        color: #d64040;
+    }
+
+    @media print {
+            body { padding-top: 0; background-color: #fff; }
+            .no-print { display: none !important; } /* Giấu những thứ không cần thiết khi in */
+            .chart-container, .stat-card { box-shadow: none; border: 1px solid #ddd; }
+        }
+
+    .stat-card { background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; }
+    .stat-card h3 { color: #d64040; font-weight: bold; font-size: 2rem; margin-top: 10px; }
+</style>

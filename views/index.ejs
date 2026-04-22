@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+        <%= title || 'Cửa hàng phần mềm' %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <%-include ('style')%>
+</head>
+
+<body>
+    <%-include ('navbar')%>
+        <section class="list-software">
+            <div class="container">
+                <h2 class="text-center mb-5 fw-bold text-uppercase">Phần mềm bản quyền nổi bật</h2>
+
+                <div class="row" id="list-trendmicro">
+                    <% if (typeof sanPhams !=='undefined' && sanPhams.length> 0) { %>
+
+                        <% sanPhams.forEach(sp=> { %>
+                            <div class="col-lg-6 mb-4">
+                                <div class="box-element p-3 h-100">
+                                    <div class="row align-items-center h-100 text-center text-md-start">
+
+                                        <div class="col-md-3">
+                                            <% if (sp.hinhAnh && sp.hinhAnh.length> 0) { %>
+                                                <img src="/images/<%= sp.hinhAnh[0] %>" alt="<%= sp.tenSanPham %>" class="img-fluid rounded"
+                                                    style="max-height: 80px; object-fit: contain;">
+                                                    <% } else { %>
+                                                        <i class="bi bi-box-seam text-primary"
+                                                            style="font-size: 4rem;"></i>
+                                                        <% } %>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <p class="sub-title text-danger mb-1">Phần mềm bản quyền</p>
+                                            <a href="/sanpham/chi-tiet/<%= sp._id %>" class="text-decoration-none">
+                                                <h4 class="text-dark fw-bold mb-2 mt-1 fs-5">
+                                                    <%= sp.tenSanPham %>
+                                                </h4>
+                                            </a>
+                                            <p class="text-muted small mb-0">
+                                                <%= sp.moTaChiTiet ? sp.moTaChiTiet.substring(0, 65) + '...'
+                                                    : 'Sản phẩm chính hãng, hỗ trợ cài đặt nhanh chóng.' %>
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-3 text-center mt-3 mt-md-0">
+                                            <div class="fw-bold h4 price-product-item mb-3 text-danger">
+                                                <%= sp.giaBan.toLocaleString('vi-VN') %>đ
+                                            </div>
+                                            <% if (typeof user !=='undefined' && user) { %>
+                                                <a href="/sanpham/chi-tiet/<%= sp._id %>"
+                                                    class="btn btn-danger fw-bold w-100">
+                                                    <i class="bi bi-cart-plus me-2"></i> Mua ngay
+                                                </a>
+                                                <% } else { %>
+                                                    <button onclick="yeuCauDangNhap()"
+                                                        class="btn btn-danger fw-bold w-100">
+                                                        <i class="bi bi-cart-plus me-2"></i> Mua ngay
+                                                    </button>
+                                                    <% } %>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+
+                                <% } else { %>
+                                    <div class="col-12 text-center text-muted py-5">
+                                        <i class="bi bi-inboxes fs-1"></i>
+                                        <p class="mt-2">Hệ thống đang cập nhật sản phẩm. Vui lòng quay lại sau!</p>
+                                    </div>
+                                    <% } %>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="/sanpham/danhsach" class="btn btn-outline-dark btn-lg px-5">Xem tất cả phần mềm</a>
+                </div>
+            </div>
+        </section>
+        <%-include ('footer')%>
+            <script>
+                async function themVaoGio(sanPhamId, soLuong = 1) {
+                    try {
+                        var response = await fetch('/giohang/api/them', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ sanPham_id: sanPhamId, soLuong: soLuong })
+                        });
+
+                        var data = await response.json();
+
+                        if (response.ok) {
+                            var cartBadge = document.getElementById('cartBadge');
+                            if (cartBadge) {
+                                cartBadge.innerText = data.cartCount;
+
+                                cartBadge.classList.add('animate__animated', 'animate__bounceIn');
+                                setTimeout(() => cartBadge.classList.remove('animate__animated', 'animate__bounceIn'), 1000);
+                            }
+
+                            alert('Đã thêm sản phẩm vào giỏ hàng thành công!');
+
+                        } else {
+                            alert('Lỗi: ' + (data.loi || 'Không thể thêm vào giỏ.'));
+                        }
+                    } catch (error) {
+                        console.error('Lỗi khi thêm vào giỏ:', error);
+                        alert('Lỗi kết nối đến máy chủ!');
+                    }
+                }
+
+                function yeuCauDangNhap() {
+                    alert("Bạn cần đăng nhập tài khoản để có thể mua phần mềm và nhận Key kích hoạt!");
+                    window.location.href = "/dangnhap";
+                }
+            </script>
+
+</body>
+
+</html>

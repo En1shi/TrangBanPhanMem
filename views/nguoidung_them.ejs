@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+        <%= title || 'Thêm người dùng - PKStore' %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <%-include ('style')%>
+</head>
+
+<body>
+    <%-include ('navbar')%>
+        <div class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-primary text-white fw-bold py-3">
+                            <i class="bi bi-person-plus-fill me-2"></i> THÊM NHÂN VIÊN MỚI
+                        </div>
+                        <div class="card-body p-4">
+
+                            <div class="alert alert-info border-start border-info border-4 mb-4">
+                                <h6 class="fw-bold"><i class="bi bi-info-circle-fill me-2"></i>Lưu ý về tài khoản:</h6>
+                                <p class="mb-0 small">Mật khẩu mặc định cho nhân viên mới sẽ là <strong
+                                        class="text-danger">123456</strong>. Bạn có thể yêu cầu nhân viên đổi lại sau
+                                    khi đăng nhập.</p>
+                            </div>
+
+                            <form action="/nguoidung/them" method="POST">
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Tên đăng nhập <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="tenDangNhap" class="form-control" required
+                                            placeholder="Ví dụ: nhanvien01">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Họ và Tên <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="hoTen" class="form-control" required
+                                            placeholder="Nhập tên đầy đủ...">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Địa chỉ Email <span
+                                            class="text-danger">*</span></label>
+                                    <input type="email" name="email" class="form-control" required
+                                        placeholder="email@pkstore.com">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Số điện thoại</label>
+                                        <input type="text" name="soDienThoai" class="form-control"
+                                            placeholder="Nhập SĐT...">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Vai trò <span
+                                                class="text-danger">*</span></label>
+                                        <select name="vaiTro" class="form-select">
+                                            <option value="NhanVien" selected>Nhân Viên</option>
+                                            <option value="Admin">Quản Trị Viên</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Link ảnh đại diện (Tùy chọn)</label>
+                                    <input type="text" name="hinhAnh" class="form-control"
+                                        placeholder="Dán link ảnh tại đây...">
+                                </div>
+
+                                <hr class="text-muted">
+
+                                <div class="d-flex justify-content-between mt-4">
+                                    <a href="/nguoidung" class="btn btn-light border fw-bold text-muted">
+                                        <i class="bi bi-arrow-left me-1"></i> Quay lại
+                                    </a>
+                                    <button type="submit" class="btn btn-primary fw-bold shadow-sm px-4">
+                                        <i class="bi bi-check-circle-fill me-2"></i> TẠO TÀI KHOẢN
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%-include ('footer')%>
+</body>
+
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <title>
+        <%= title %> - PKStore Admin
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <%- include('style') %>
+</head>
+
+<body>
+    <div class="no-print"><%- include('navbar') %></div>
+
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-0">Báo Cáo Tổng Quan</h2>
+                <p class="text-muted mb-0" id="ngayBaoCao"></p>
+            </div>
+            <button class="btn btn-danger no-print fw-bold shadow-sm" onclick="window.print()">
+                <i class="bi bi-printer me-2"></i> In Báo Cáo
+            </button>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12 mb-2">
+                <div class="stat-card d-flex justify-content-between align-items-center py-2 px-4">
+                    <h6 class="text-muted text-uppercase mb-0">Tổng Doanh Thu:</h6>
+                    <h4 id="hienThiDoanhThu" class="mb-0 text-danger">0đ</h4>
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <div class="stat-card d-flex justify-content-between align-items-center py-2 px-4">
+                    <h6 class="text-muted text-uppercase mb-0">Sản Phẩm Đã Bán:</h6>
+                    <h4 id="hienThiSoDon" class="mb-0 text-primary">0 SP</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h5 class="fw-bold mb-3 text-center text-uppercase">Bảng Kê Chi Tiết Sản Phẩm</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm align-middle text-center mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 50px;">STT</th>
+                            <th class="text-start">Tên phần mềm</th>
+                            <th style="width: 120px;">Số lượng</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bangChiTietSanPham">
+                        <tr><td colspan="3" class="text-muted py-3">Đang tải dữ liệu...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row mt-5 d-none d-print-flex" style="page-break-inside: avoid;">
+                <div class="col-6 text-center">
+                    <p class="fw-bold mb-5">Người lập biểu</p>
+                    <p class="mt-5 border-top d-inline-block px-4 pt-1">Họ tên: ............................</p>
+                </div>
+                <div class="col-6 text-center">
+                    <p class="fw-bold mb-5">Giám đốc / Kế toán trưởng</p>
+                    <p class="mt-5 border-top d-inline-block px-4 pt-1">(Ký tên và đóng dấu)</p>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('ngayBaoCao').innerText = 'Dữ liệu tính đến: ' + new Date().toLocaleString('vi-VN');
+            var formatCurrency = (number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
+            
+            async function taiDuLieuThongKe() {
+                try {
+                    // ĐÃ SỬA: Gọi đúng đường dẫn API mới
+                    var res = await fetch('/thongke/api/du-lieu');
+                    
+                    if (!res.ok) {
+                        throw new Error('Lỗi từ Server');
+                    }
+                    
+                    var data = await res.json();
+
+                    document.getElementById('hienThiDoanhThu').innerText = formatCurrency(data.tongDoanhThu);
+                    // Sửa lại hiển thị số lượng sản phẩm bán ra cho hợp logic
+                    var tongSPBanDuoc = data.chiTietSanPham ? data.chiTietSanPham.reduce((tong, sp) => tong + sp.soLuongBan, 0) : 0;
+                    document.getElementById('hienThiSoDon').innerText = tongSPBanDuoc;
+
+                    var tbody = document.getElementById('bangChiTietSanPham');
+                    tbody.innerHTML = '';
+
+                    if (!data.chiTietSanPham || data.chiTietSanPham.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3" class="text-muted py-3">Chưa có dữ liệu bán hàng</td></tr>';
+                        return;
+                    }
+
+                    // Lặp qua từng sản phẩm và tạo hàng (row)
+                    data.chiTietSanPham.forEach((sp, index) => {
+                        tbody.innerHTML += `
+                <tr>
+                    <td class="fw-bold">${index + 1}</td>
+                    <td class="text-start text-danger fw-bold">${sp._id}</td>
+                    <td class="fw-bold fs-5">${sp.soLuongBan}</td>
+                </tr>
+            `;
+                    });
+
+                } catch (error) {
+                    console.error("Lỗi lấy dữ liệu thống kê", error);
+                    document.getElementById('bangChiTietSanPham').innerHTML = '<tr><td colspan="3" class="text-danger py-3">Lỗi tải dữ liệu. Vui lòng thử lại!</td></tr>';
+                }
+            }
+            
+            document.addEventListener('DOMContentLoaded', taiDuLieuThongKe);
+        </script>
+</body>
+
+</html>

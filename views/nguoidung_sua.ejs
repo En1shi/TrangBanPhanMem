@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Quản lý Người Dùng - PKStore Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <%- include('style') %>
+</head>
+
+<body>
+    <%- include('navbar') %>
+
+        <div class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow border-0">
+                        <div class="card-header bg-warning fw-bold text-center py-3">
+                            <i class="bi bi-pencil-square me-2"></i> CẬP NHẬT TÀI KHOẢN
+                        </div>
+                        <div class="card-body p-4">
+
+                            <form action="/nguoidung/sua/<%= NguoiDung._id %>" method="POST">
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Họ Tên</label>
+                                    <input type="text" name="hoTen" class="form-control"
+                                        value="<%= NguoiDung.HoTen || NguoiDung.hoTen || '' %>">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Email</label>
+                                    <input type="email" name="email" class="form-control"
+                                        value="<%= NguoiDung.Email || NguoiDung.email || '' %>">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Vai Trò</label>
+                                        <% var vaiTro=NguoiDung.VaiTro || NguoiDung.vaiTro; %>
+                                            <select name="vaiTro" class="form-select">
+                                                <option value="KhachHang" <%=vaiTro==='KhachHang' ? 'selected' : '' %>
+                                                    >Khách Hàng</option>
+                                                <option value="NhanVien" <%=vaiTro==='NhanVien' ? 'selected' : '' %>
+                                                    >Nhân Viên</option>
+                                                <option value="Admin" <%=vaiTro==='Admin' || vaiTro==='QuanTriVien'
+                                                    ? 'selected' : '' %>>Quản Trị</option>
+                                            </select>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Trạng Thái</label>
+                                        <% var trangThai=NguoiDung.TrangThai || NguoiDung.trangThai; %>
+                                            <select name="trangThai" class="form-select">
+                                                <option value="HoatDong" <%=trangThai==='HoatDong' ? 'selected' : '' %>
+                                                    >Hoạt Động</option>
+                                                <option value="BiKhoa" <%=trangThai==='BiKhoa' ? 'selected' : '' %>>Bị
+                                                    Khóa</option>
+                                            </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Reset Mật Khẩu</label>
+                                    <input type="password" name="matKhau" class="form-control"
+                                        placeholder="Bỏ trống nếu không muốn đổi mật khẩu...">
+                                </div>
+
+                                <div class="d-flex justify-content-between mt-4">
+                                    <a href="/nguoidung" class="btn btn-light border"><i class="bi bi-arrow-left"></i>
+                                        Quay lại</a>
+                                    <button type="submit" class="btn btn-warning fw-bold px-5">LƯU THAY ĐỔI</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('footer') %>
+</body>
+
+</html>

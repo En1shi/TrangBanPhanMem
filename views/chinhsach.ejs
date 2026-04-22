@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+        <%= title || 'Danh mục sản phẩm - PKStore' %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <%-include ('style')%>
+</head>
+
+<body>
+    <%-include ('navbar')%>
+        <div class="bg-dark text-white text-center py-5 mb-5 shadow-sm">
+            <div class="container">
+                <h2 class="fw-bold text-uppercase mb-0">Chính Sách & Điều Khoản</h2>
+                <p class="mt-2 text-light mb-0">Minh bạch - Rõ ràng - Đảm bảo quyền lợi khách hàng</p>
+            </div>
+        </div>
+
+        <div class="container mb-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+
+                    <div class="accordion shadow-sm" id="accordionChinhSach">
+
+                        <div class="accordion-item border-0 border-bottom">
+                            <h2 class="accordion-header" id="headingBaoMat">
+                                <button class="accordion-button fw-bold fs-5 text-danger" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseBaoMat" aria-expanded="true"
+                                    aria-controls="collapseBaoMat">
+                                    <i class="bi bi-shield-lock-fill me-3"></i> 1. Chính Sách Bảo Mật Thông Tin
+                                </button>
+                            </h2>
+                            <div id="collapseBaoMat" class="accordion-collapse collapse show"
+                                aria-labelledby="headingBaoMat" data-bs-parent="#accordionChinhSach">
+                                <div class="accordion-body text-muted lh-lg">
+                                    <p><strong>PKStore</strong> cam kết bảo mật tuyệt đối thông tin cá nhân của khách
+                                        hàng. Chúng tôi thu thập thông tin (Họ tên, Email, Số điện thoại) chỉ nhằm mục
+                                        đích:</p>
+                                    <ul>
+                                        <li>Gửi mã Key bản quyền và hóa đơn thanh toán.</li>
+                                        <li>Hỗ trợ kỹ thuật và bảo hành sản phẩm.</li>
+                                        <li>Thông báo về các bản cập nhật phần mềm hoặc chương trình khuyến mãi.</li>
+                                    </ul>
+                                    <p>Chúng tôi tuyệt đối <strong>không bán, chia sẻ hay trao đổi</strong> dữ liệu cá
+                                        nhân của khách hàng cho bất kỳ bên thứ ba nào khác, ngoại trừ trường hợp có yêu
+                                        cầu từ cơ quan pháp luật có thẩm quyền.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-0 border-bottom">
+                            <h2 class="accordion-header" id="headingBaoHanh">
+                                <button class="accordion-button collapsed fw-bold fs-5 text-danger" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseBaoHanh" aria-expanded="false"
+                                    aria-controls="collapseBaoHanh">
+                                    <i class="bi bi-arrow-repeat me-3"></i> 2. Chính Sách Bảo Hành & Hoàn Tiền
+                                </button>
+                            </h2>
+                            <div id="collapseBaoHanh" class="accordion-collapse collapse"
+                                aria-labelledby="headingBaoHanh" data-bs-parent="#accordionChinhSach">
+                                <div class="accordion-body text-muted lh-lg">
+                                    <p>Do đặc thù của sản phẩm kỹ thuật số (Mã Key bản quyền), PKStore áp dụng chính
+                                        sách sau:</p>
+                                    <ul>
+                                        <li><strong>Bảo hành 1 đổi 1:</strong> Trong suốt thời hạn của Key (1 năm, 2 năm
+                                            hoặc vĩnh viễn), nếu Key bị lỗi từ phía máy chủ của hãng phát hành, chúng
+                                            tôi sẽ cấp lại Key mới hoàn toàn miễn phí.</li>
+                                        <li><strong>Hoàn tiền 100%:</strong> Nếu kỹ thuật viên của chúng tôi không thể
+                                            kích hoạt thành công phần mềm cho máy tính của bạn qua Ultraviewer trong
+                                            vòng 48h kể từ lúc mua.</li>
+                                        <li class="text-danger"><strong>Từ chối bảo hành/Hoàn tiền đối với các trường
+                                                hợp:</strong> Khách hàng tự ý chia sẻ Key cho nhiều máy tính vượt quá số
+                                            lượng cho phép, hoặc máy tính khách hàng bị nhiễm virus dẫn đến mất Key. Trả
+                                            hàng vì lý do "Không còn nhu cầu sử dụng sau khi mua".</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="headingDieuKhoan">
+                                <button class="accordion-button collapsed fw-bold fs-5 text-danger" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseDieuKhoan" aria-expanded="false"
+                                    aria-controls="collapseDieuKhoan">
+                                    <i class="bi bi-file-earmark-text-fill me-3"></i> 3. Điều Khoản Sử Dụng Dịch Vụ
+                                </button>
+                            </h2>
+                            <div id="collapseDieuKhoan" class="accordion-collapse collapse"
+                                aria-labelledby="headingDieuKhoan" data-bs-parent="#accordionChinhSach">
+                                <div class="accordion-body text-muted lh-lg">
+                                    <p>Khi đăng ký tài khoản và mua hàng tại PKStore, khách hàng đồng ý với các điều
+                                        khoản sau:</p>
+                                    <ul>
+                                        <li>Mọi mã Key được cung cấp đều là sản phẩm chính hãng, yêu cầu khách hàng tải
+                                            bộ cài đặt phần mềm trực tiếp từ trang chủ của hãng.</li>
+                                        <li>Khách hàng có trách nhiệm tự bảo vệ tài khoản và mật khẩu đăng nhập tại
+                                            PKStore.</li>
+                                        <li>PKStore có quyền tạm khóa tài khoản nếu phát hiện hành vi gian lận thanh
+                                            toán hoặc cố tình phá hoại hệ thống.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <%-include ('footer')%>
+            <%-include ('javascript')%>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+
+    function yeuCauDangNhap() {
+        alert("Bạn cần đăng nhập tài khoản để có thể mua phần mềm và nhận Key kích hoạt!");
+        window.location.href = "/dangnhap";
+    }
+    
+    document.addEventListener('DOMContentLoaded', fetchAndRenderProducts);
+
+    async function xoaKey(id) {
+        if (confirm("Xóa key này khỏi kho?")) {
+            try {
+                var response = await fetch('/api/kho-ban-quyen/' + id, { method: 'DELETE' });
+                if (response.ok) {
+                    loadDanhSachKey();
+                } else {
+                    alert("Lỗi khi xóa!");
+                }
+            } catch (error) {
+                alert("Lỗi kết nối server");
+            }
+        }
+    }
+
+    async function loadDanhSachSanPham() {
+        var selectSP = document.getElementById('sanPham_id');
+        if (selectSP.options.length > 1) return;
+
+        try {
+            var response = await fetch('/api/san-pham');
+            var sanPhams = await response.json();
+
+            selectSP.innerHTML = '<option value="" disabled selected>-- Chọn phần mềm để nạp key --</option>';
+            sanPhams.forEach(sp => {
+                selectSP.innerHTML += `<option value="${sp._id}">${sp.tenSanPham}</option>`;
+            });
+        } catch (error) {
+            selectSP.innerHTML = '<option value="" disabled>Lỗi tải sản phẩm!</option>';
+        }
+    }
+
+    async function xoaKey(id) {
+        if (confirm("Xóa key này khỏi kho?")) {
+            try {
+                var response = await fetch('/api/kho-ban-quyen/' + id, { method: 'DELETE' });
+                if (response.ok) {
+                    loadDanhSachKey();
+                } else {
+                    alert("Lỗi khi xóa!");
+                }
+            } catch (error) {
+                alert("Lỗi kết nối server");
+            }
+        }
+    }
+    async function capNhatGioHang(id, soLuong) {
+        try {
+            var res = await fetch('/api/giohang/cap-nhat', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sanPham_id: id, soLuong: soLuong })
+            });
+            if (res.ok) window.location.reload();
+        } catch (err) { alert('Lỗi!'); }
+    }
+
+    async function xoaKhoiGio(id) {
+        if (confirm('Xóa sản phẩm này khỏi giỏ?')) {
+            try {
+                var res = await fetch('/api/giohang/xoa/' + id, { method: 'DELETE' });
+                if (res.ok) window.location.reload();
+            } catch (err) { alert('Lỗi!'); }
+        }
+    }
+
+    async function themVaoGio(sanPhamId, soLuong = 1) {
+        try {
+            var response = await fetch('/api/giohang/them', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sanPham_id: sanPhamId, soLuong: soLuong })
+            });
+
+            var data = await response.json();
+
+            if (response.ok) {
+                var cartBadge = document.getElementById('cartBadge');
+                if (cartBadge) {
+                    cartBadge.innerText = data.cartCount;
+
+                    cartBadge.classList.add('animate__animated', 'animate__bounceIn');
+                    setTimeout(() => cartBadge.classList.remove('animate__animated', 'animate__bounceIn'), 1000);
+                }
+
+                alert('Đã thêm sản phẩm vào giỏ hàng thành công!');
+
+            } else {
+                alert('Lỗi: ' + (data.loi || 'Không thể thêm vào giỏ.'));
+            }
+        } catch (error) {
+            console.error('Lỗi khi thêm vào giỏ:', error);
+            alert('Lỗi kết nối đến máy chủ!');
+        }
+    }
+</script>

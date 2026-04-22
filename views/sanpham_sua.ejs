@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Cập Nhật Sản Phẩm - PKSoft Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <%- include('style')%>
+</head>
+
+<body>
+    <%- include('navbar') %>
+
+        <div class="container my-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold mb-0">Sửa Thông Tin Phần Mềm</h2>
+                <a href="/sanpham" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Quay lại</a>
+            </div>
+
+            <input type="hidden" id="idCuaSanPham" value="<%= sanPham._id %>">
+
+            <form id="formSuaSanPham">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="admin-card">
+                            <h5 class="card-title">Thông tin cơ bản</h5>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Tên phần mềm <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="tenSanPham" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Mô tả chi tiết</label>
+                                <textarea class="form-control" id="moTaChiTiet" rows="5"></textarea>
+                            </div>
+
+                            <h5 class="card-title mt-4">Cấu hình tối thiểu</h5>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Hệ điều hành</label>
+                                    <input type="text" class="form-control" id="ch_os">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">RAM tối thiểu</label>
+                                    <input type="text" class="form-control" id="ch_ram">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Dung lượng ổ cứng</label>
+                                    <input type="text" class="form-control" id="ch_disk">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="admin-card">
+                            <h5 class="card-title">Phân loại & Giá</h5>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Danh mục <span class="text-danger">*</span></label>
+                                <select class="form-select" id="danhMuc_id" required>
+                                    <option value="" disabled selected>Đang tải dữ liệu...</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Giá bán (VNĐ) <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="giaBan" required min="0">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Giá gốc (VNĐ)</label>
+                                <input type="number" class="form-control" id="giaGoc" min="0">
+                            </div>
+
+                            <hr>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Thay đổi hình ảnh (Tùy chọn)</label>
+                                <input type="file" class="form-control mb-2" id="hinhAnh"
+                                    accept="image/png, image/jpeg, image/jpg, image/webp">
+                                <div class="form-text text-primary">Để trống nếu bạn muốn giữ nguyên hình ảnh hiện tại.
+                                </div>
+
+                                <div id="previewContainer" class="mt-3 text-center border rounded p-2 bg-light">
+                                    <span class="small text-muted d-block mb-1">Ảnh hiện tại:</span>
+                                    <img id="anhXemTruoc" src="/images/default_software.png" alt="Preview"
+                                        style="max-height: 150px; border-radius: 4px;">
+                                </div>
+                            </div>
+
+                            <div class="form-check form-switch mb-4 mt-3">
+                                <input class="form-check-input" type="checkbox" id="hienThi">
+                                <label class="form-check-label fw-bold" for="hienThi">Hiển thị trên Web</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-warning-custom w-100 py-2 fs-5">
+                                <i class="bi bi-save"></i> Cập Nhật Sản Phẩm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <%- include('footer') %>
+
+            <script>
+                var idSanPham = document.getElementById('idCuaSanPham').value.trim();
+                var sp = <%- JSON.stringify(sanPham) %>;
+
+                async function khoiTaoTrang() {
+                    try {
+                        // 2. SỬA LẠI ĐƯỜNG DẪN API DANH MỤC
+                        var dmResponse = await fetch('/danhmuc/api/danhsach');
+                        var danhMucs = await dmResponse.json();
+                        var selectDanhMuc = document.getElementById('danhMuc_id');
+
+                        selectDanhMuc.innerHTML = '<option value="" disabled>-- Chọn danh mục --</option>';
+                        danhMucs.forEach(dm => {
+                            selectDanhMuc.innerHTML += `<option value="${dm._id}">${dm.tenDanhMuc}</option>`;
+                        });
+
+                        // 3. ĐỔ DỮ LIỆU CŨ VÀO FORM
+                        document.getElementById('tenSanPham').value = sp.tenSanPham;
+                        document.getElementById('moTaChiTiet').value = sp.moTaChiTiet || '';
+                        document.getElementById('giaBan').value = sp.giaBan;
+                        document.getElementById('giaGoc').value = sp.giaGoc || '';
+                        document.getElementById('hienThi').checked = sp.hienThi;
+
+                        if (sp.danhMuc_id) {
+                            selectDanhMuc.value = sp.danhMuc_id._id || sp.danhMuc_id;
+                        }
+
+                        if (sp.cauHinhToiThieu) {
+                            document.getElementById('ch_os').value = sp.cauHinhToiThieu.os || '';
+                            document.getElementById('ch_ram').value = sp.cauHinhToiThieu.ram || '';
+                            document.getElementById('ch_disk').value = sp.cauHinhToiThieu.disk || '';
+                        }
+
+                        if (sp.hinhAnh && sp.hinhAnh.length > 0) {
+                            document.getElementById('anhXemTruoc').src = '/images/' + sp.hinhAnh[0];
+                            document.getElementById('previewContainer').classList.remove('d-none');
+                        } else {
+                            document.getElementById('previewContainer').classList.add('d-none');
+                        }
+
+                    } catch (error) {
+                        console.error(error);
+                        alert("Lỗi khởi tạo form!");
+                    }
+                }
+
+                document.addEventListener('DOMContentLoaded', khoiTaoTrang);
+
+                // Chức năng xem trước ảnh khi chọn file mới (Giữ nguyên)
+                document.getElementById('hinhAnh').addEventListener('change', function (event) {
+                    var file = event.target.files[0];
+                    var anhXemTruoc = document.getElementById('anhXemTruoc');
+                    var previewContainer = document.getElementById('previewContainer');
+
+                    if (file) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            anhXemTruoc.src = e.target.result;
+                            previewContainer.classList.remove('d-none');
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                // Xử lý sự kiện Submit Form Cập nhật
+                document.getElementById('formSuaSanPham').addEventListener('submit', async function (e) {
+                    e.preventDefault();
+
+                    var formData = new FormData();
+                    formData.append('tenSanPham', document.getElementById('tenSanPham').value);
+                    formData.append('danhMuc_id', document.getElementById('danhMuc_id').value);
+                    formData.append('moTaChiTiet', document.getElementById('moTaChiTiet').value);
+                    formData.append('giaBan', document.getElementById('giaBan').value);
+
+                    var giaGocValue = document.getElementById('giaGoc').value;
+                    if (giaGocValue) formData.append('giaGoc', giaGocValue);
+
+                    formData.append('hienThi', document.getElementById('hienThi').checked);
+
+                    var cauHinh = {
+                        os: document.getElementById('ch_os').value,
+                        ram: document.getElementById('ch_ram').value,
+                        disk: document.getElementById('ch_disk').value
+                    };
+                    formData.append('cauHinhToiThieu', JSON.stringify(cauHinh));
+
+                    var fileInput = document.getElementById('hinhAnh');
+                    if (fileInput.files.length > 0) {
+                        formData.append('hinhAnh', fileInput.files[0]);
+                    }
+
+                    try {
+                        var response = await fetch('/sanpham/sua/' + idSanPham, {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        // Backend của chúng ta dùng lệnh redirect nên kiểm tra response.ok hoặc redirected
+                        if (response.ok || response.redirected) {
+                            alert('Cập nhật sản phẩm thành công!');
+                            window.location.href = '/sanpham';
+                        } else {
+                            alert('Lỗi: Không thể cập nhật sản phẩm');
+                        }
+                    } catch (error) {
+                        alert('Lỗi kết nối đến máy chủ!');
+                    }
+                });
+            </script>
+</body>
+
+</html>
