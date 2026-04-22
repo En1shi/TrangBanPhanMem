@@ -66,5 +66,5 @@ app.use('/giohang', gioHangRouter);
 app.use('/thongke', thongKeRouter);
 
 app.listen(3000, () => {
-    console.log('Máy chủ đang chạy tại http://127.0.0.1:3000/');
+    console.log('Máy chủ đang chạy tại https://trangbanphanmem-3.onrender.com');
 });
